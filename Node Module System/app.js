@@ -1,13 +1,8 @@
-const fsModule = require('fs');
+const EventEmitter = require('events');
+const emitter = new EventEmitter();
 
-// const files = fsModule.readdirSync(".");
-// console.log(files);
+emitter.on('messageLogged', (arg) => {
+    console.log(arg);
+});
 
-fsModule.readdir("./s", (err, files) => {
-    if (err) {
-        console.error(`Error reading directory!, ${err}`);
-    }
-    if (files) {
-        console.log(`Files are: ${files}`);
-    }
-})
+emitter.emit('messageLogged', { id: 1, name: "Yassine" })
