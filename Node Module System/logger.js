@@ -1,8 +1,10 @@
-function log(message) {
-    console.log(message);
-}
+const EventEmitter = require('events');
+const emitter = new EventEmitter();
 
-module.exports.logFunction = log;
-module.exports.variable= "Hey"
+emitter.on('messageLogged', (arg) => {
+    console.log("This is callback inside loggerModule: ", arg);
+});
+
+module.exports = emitter;
 
 console.log("inside logger");

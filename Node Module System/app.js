@@ -1,8 +1,5 @@
 const EventEmitter = require('events');
 const emitter = new EventEmitter();
+const loggerModule = require("./logger");
 
-emitter.on('messageLogged', (arg) => {
-    console.log(arg);
-});
-
-emitter.emit('messageLogged', { id: 1, name: "Yassine" })
+loggerModule.emit('messageLogged', { id: 1, name: "Yassine" })
