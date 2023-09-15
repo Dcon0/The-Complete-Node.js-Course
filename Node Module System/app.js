@@ -1,3 +1,4 @@
-const pathModule = require('path');
+const osModule = require('os');
 
-console.log(pathModule.parse(__filename))
+console.log(`My machine's total memory is: ${osModule.totalmem()} Bytes
+Free Memory: ${osModule.freemem()} Bytes`);
