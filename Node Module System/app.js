@@ -1,4 +1,4 @@
-const osModule = require('os');
+const fsModule = require('fs');
 
-console.log(`My machine's total memory is: ${osModule.totalmem()} Bytes
-Free Memory: ${osModule.freemem()} Bytes`);
+const files = fsModule.readdirSync(".");
+console.log(files);
