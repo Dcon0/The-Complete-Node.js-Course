@@ -1,7 +1,3 @@
-var x =;
+const pathModule = require('path');
 
-const loggerModule = require('./logger');
-
-loggerModule.logFunction("Hey");
-console.log("======")
-console.log(loggerModule);
+console.log(pathModule.parse(__filename))
