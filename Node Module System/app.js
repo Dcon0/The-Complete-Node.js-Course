@@ -1,5 +1,9 @@
 const EventEmitter = require('events');
-const emitter = new EventEmitter();
-const loggerModule = require("./logger");
+const appEmitter = new EventEmitter();
+const loggerModule = require("./Logger");
 
-loggerModule.emit('messageLogged', { id: 1, name: "Yassine" })
+appEmitter.on("messageLogged", (arg) => {
+    console.log("[app.js]", arg);
+})
+
+loggerModule(appEmitter, "msgggg");

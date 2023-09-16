@@ -1,10 +1,6 @@
-const EventEmitter = require('events');
-const emitter = new EventEmitter();
+function log(refEmitter, message) {
+    console.log(`[logger.js] ${message}`);
+    refEmitter.emit("messageLogged", { id: 1, message: message });
+}
 
-emitter.on('messageLogged', (arg) => {
-    console.log("This is callback inside loggerModule: ", arg);
-});
-
-module.exports = emitter;
-
-console.log("inside logger");
+module.exports = log;
