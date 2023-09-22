@@ -16,9 +16,8 @@ app.get('/api/courses/:id', (req, res) => {
     const course = courses.find((item) => {
         return item.id == req.params.id;
     })
-    if (course === undefined)
-        res.send("The requested course doesn't exist!");
-    res.send(`You requested course id ${req.params.id}:
+    if (!course) res.status(404).send("The requested course doesn't exist!");
+    else res.send(`You requested course id ${req.params.id}:
     ${JSON.stringify(course)}`);
 })
 
