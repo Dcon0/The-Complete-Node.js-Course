@@ -48,14 +48,18 @@ app.put('/api/courses/:id', (req, res) => {
     const { error } = schema.validate(req.body);
     if (error) { res.status(400).send(error.details[0].message); return; }
 
-    // courses = courses.map((item) => {
-    //     if (item.id === requestedId) {
-    //         item.name = req.body.name;
-    //     }
-    //     return item;
-    // })
-
     course.name = req.body.name;
+
+    res.send(course);
+})
+
+app.delete('/api/courses/:id', (req, res) => {
+    const requestedId = parseInt(req.params.id)
+
+    const course = courses.find(item => item.id === requestedId);
+    if (!course) { res.status(404).send("The requested course doesn't exist!"); return; }
+
+    courses.splice(courses.indexOf(course), 1);
 
     res.send(course);
 })
