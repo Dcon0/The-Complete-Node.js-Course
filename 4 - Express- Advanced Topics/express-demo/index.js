@@ -1,16 +1,24 @@
 const Joi = require('joi');
 const express = require('express');
 const log = require('./logger');
-const auth = require('./auth');
+const helmet = require('helmet');
+const morgan = require('morgan');
 
 const app = express();
 
 
 app.use(log);
-app.use(auth);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'))
+app.use(helmet());
+if(app.get('env')==='development'){
+    app.use(morgan('tiny'));
+    console.log('Morgan enabled...');
+}
+
+console.log(process.env.NODE_ENV);
+console.log(app.get('env'));
 
 const schema = Joi.object({
     name: Joi.string().min(3).required()
