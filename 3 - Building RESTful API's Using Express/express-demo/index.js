@@ -5,10 +5,11 @@ const auth = require('./auth');
 
 const app = express();
 
-app.use(express.json());
+
 app.use(log);
 app.use(auth);
-
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 const schema = Joi.object({
     name: Joi.string().min(3).required()
