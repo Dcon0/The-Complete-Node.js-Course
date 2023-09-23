@@ -10,6 +10,7 @@ app.use(log);
 app.use(auth);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'))
 
 const schema = Joi.object({
     name: Joi.string().min(3).required()
