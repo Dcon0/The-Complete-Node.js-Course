@@ -1,3 +1,4 @@
+const config = require('config');
 const Joi = require('joi');
 const express = require('express');
 const log = require('./logger');
@@ -12,14 +13,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'))
 app.use(helmet());
-if(app.get('env')==='development'){
+
+console.log('Application Name: ' + config.get('name'));
+console.log('Mail: ' + config.get('mail.host'));
+console.log('Password: ' + config.get('mail.password'));
+
+
+if (app.get('env') === 'dev') {
     app.use(morgan('tiny'));
     console.log('Morgan enabled...');
 }
-
-console.log(process.env.NODE_ENV);
-console.log(app.get('env'));
-
 const schema = Joi.object({
     name: Joi.string().min(3).required()
 })
