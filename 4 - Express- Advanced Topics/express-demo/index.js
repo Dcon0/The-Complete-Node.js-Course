@@ -8,6 +8,8 @@ const morgan = require('morgan');
 
 const app = express();
 
+app.set('view engine', 'pug');
+app.set('views', './views');
 
 app.use(log);
 app.use(express.json());
@@ -32,7 +34,10 @@ let courses = [{ id: 1, name: 'Course One' },
 { id: 2, name: 'Course Two' }];
 
 app.get('/', (req, res) => {
-    res.send("Hello world");
+    res.render('index', {
+        title: "Express Demo App",
+        message: 'Hello'
+    });
 });
 
 app.get('/api/courses', (req, res) => {
