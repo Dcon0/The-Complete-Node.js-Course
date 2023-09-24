@@ -1,3 +1,4 @@
+const startupDebugger = require('debug')('app:startup');
 const config = require('config');
 const Joi = require('joi');
 const express = require('express');
@@ -21,7 +22,7 @@ console.log('Password: ' + config.get('mail.password'));
 
 if (app.get('env') === 'dev') {
     app.use(morgan('tiny'));
-    console.log('Morgan enabled...');
+    startupDebugger('Morgan enabled...');
 }
 const schema = Joi.object({
     name: Joi.string().min(3).required()
