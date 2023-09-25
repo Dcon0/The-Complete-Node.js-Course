@@ -1,37 +1,34 @@
 const startupDebugger = require('debug')('app:startup');
 const config = require('config');
-const Joi = require('joi');
 const express = require('express');
-const log = require('./logger');
+const logger = require('./middleware/logger');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const courses = require('./routes/courses');
 
 const app = express();
 
 app.set('view engine', 'pug');
 app.set('views', './views');
 
-app.use(log);
+app.use(logger);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'))
 app.use(helmet());
-
-console.log('Application Name: ' + config.get('name'));
-console.log('Mail: ' + config.get('mail.host'));
-console.log('Password: ' + config.get('mail.password'));
-
-
 if (app.get('env') === 'dev') {
     app.use(morgan('tiny'));
     startupDebugger('Morgan enabled...');
 }
-const schema = Joi.object({
-    name: Joi.string().min(3).required()
-})
 
-let courses = [{ id: 1, name: 'Course One' },
-{ id: 2, name: 'Course Two' }];
+//RestAPI routes have to be set/written after setting the other middlewares using 'app.use()', otherwise,
+//throughout the request pipeline, going sequentially through middlewares/routes(get/post/put/delete HTTP verbs), the routes will use 
+//"res.send()" and not "next()", thereby sending a response to the user and not going through the rest of the middlewares using the "next()" method
+app.use('/api/courses', courses);
+
+console.log('Application Name: ' + config.get('name'));
+console.log('Mail: ' + config.get('mail.host'));
+console.log('Password: ' + config.get('mail.password'));
 
 app.get('/', (req, res) => {
     res.render('index', {
@@ -39,55 +36,6 @@ app.get('/', (req, res) => {
         message: 'Hello'
     });
 });
-
-app.get('/api/courses', (req, res) => {
-    res.send(courses);
-})
-
-app.get('/api/courses/:id', (req, res) => {
-    const course = courses.find(item => item.id === parseInt(req.params.id));
-    //404 - Resource Not Found
-    if (!course) res.status(404).send("The requested course doesn't exist!");
-    else res.send(course);
-})
-
-app.post('/api/courses', (req, res) => {
-    const result = schema.validate(req.body);
-
-    if (result.error) { res.status(400).send(result.error.details[0].message); return; }
-
-    const course = {
-        id: courses.length + 1,
-        name: req.body.name
-    };
-    courses.push(course);
-    res.send(course);
-})
-
-app.put('/api/courses/:id', (req, res) => {
-    const requestedId = parseInt(req.params.id)
-
-    const course = courses.find(item => item.id === requestedId);
-    if (!course) { res.status(404).send("The requested course doesn't exist!"); return; }
-
-    const { error } = schema.validate(req.body);
-    if (error) { res.status(400).send(error.details[0].message); return; }
-
-    course.name = req.body.name;
-
-    res.send(course);
-})
-
-app.delete('/api/courses/:id', (req, res) => {
-    const requestedId = parseInt(req.params.id)
-
-    const course = courses.find(item => item.id === requestedId);
-    if (!course) { res.status(404).send("The requested course doesn't exist!"); return; }
-
-    courses.splice(courses.indexOf(course), 1);
-
-    res.send(course);
-})
 
 const port = process.env.PORT || 3000;
 app.listen(port, "127.0.0.1", () => console.log(`Listening on port ${port}...`));
