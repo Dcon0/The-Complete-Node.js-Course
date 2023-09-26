@@ -1,10 +1,12 @@
 console.log('[main @' + new Date().toLocaleTimeString() + '] before');
 
-getUserPromiseFunction(1).then(result => {
-    console.log('[main @' + new Date().toLocaleTimeString() + '] User:', result);
-    getGitHubRepoPromiseFunction(result.id).then(result => console.log('[main @' + new Date().toLocaleTimeString() + '] Repos:', result))
-        .catch(err => console.log(err.message));
-})
+getUserPromiseFunction(1)
+    .then(result => {
+        console.log('[main @' + new Date().toLocaleTimeString() + '] User:', result);
+        getGitHubRepoPromiseFunction(result.id)
+            .then(result => console.log('[main @' + new Date().toLocaleTimeString() + '] Repos:', result))
+            .catch(err => console.log(err.message));
+    })
     .catch(err => console.log(err.message));
 
 console.log('[main @' + new Date().toLocaleTimeString() + '] after');
