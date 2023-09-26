@@ -1,10 +1,10 @@
 console.log('[main @' + new Date().toLocaleTimeString() + '] before');
 
 getUserPromiseFunction(1)
-    .then(result => {
-        console.log('[main @' + new Date().toLocaleTimeString() + '] User:', result);
-        getGitHubRepoPromiseFunction(result.id)
-            .then(result => console.log('[main @' + new Date().toLocaleTimeString() + '] Repos:', result))
+    .then(user => {
+        console.log('[main @' + new Date().toLocaleTimeString() + '] User:', user);
+        getGitHubRepoPromiseFunction(user.id)
+            .then(repos => console.log('[main @' + new Date().toLocaleTimeString() + '] Repos:', repos))
             .catch(err => console.log(err.message));
     })
     .catch(err => console.log(err.message));
@@ -28,7 +28,7 @@ function getGitHubRepoPromiseFunction(userId) {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             console.log('[getGitHubRepo Promise @' + new Date().toLocaleTimeString() + '] Calling GitHub API');
-            console.log('[getGitHubRepo Promise @' + new Date().toLocaleTimeString() + '] Repo Contents Retrieved Successfully');
+            console.log('[getGitHubRepo Promise @' + new Date().toLocaleTimeString() + '] Repo Contents of user with id ' + userId + ' Retrieved Successfully');
             resolve(['Repo1', 'Repo2', 'Repo3']);
             reject(new Error('There has been an error'));
         }, 2000);
