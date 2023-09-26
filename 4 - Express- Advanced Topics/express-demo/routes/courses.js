@@ -9,17 +9,9 @@ const schema = Joi.object({
 let courses = [{ id: 1, name: 'Course One' },
 { id: 2, name: 'Course Two' }];
 
-router.get('', (req, res) => {
+router.route('').get((req, res) => {
     res.send(courses);
-})
-
-router.get('/:id', (req, res) => {
-    const course = courses.find(item => item.id === parseInt(req.params.id));
-    if (!course) res.status(404).send("The requested course doesn't exist!");
-    else res.send(course);
-})
-
-router.post('', (req, res) => {
+}).post((req, res) => {
     const result = schema.validate(req.body);
 
     if (result.error) { res.status(400).send(result.error.details[0].message); return; }
@@ -30,9 +22,13 @@ router.post('', (req, res) => {
     };
     courses.push(course);
     res.send(course);
-})
+});
 
-router.put('/:id', (req, res) => {
+router.route('/:id').get((req, res) => {
+    const course = courses.find(item => item.id === parseInt(req.params.id));
+    if (!course) res.status(404).send("The requested course doesn't exist!");
+    else res.send(course);
+}).put((req, res) => {
     const requestedId = parseInt(req.params.id)
 
     const course = courses.find(item => item.id === requestedId);
@@ -44,9 +40,7 @@ router.put('/:id', (req, res) => {
     course.name = req.body.name;
 
     res.send(course);
-})
-
-router.delete('/:id', (req, res) => {
+}).delete((req, res) => {
     const requestedId = parseInt(req.params.id)
 
     const course = courses.find(item => item.id === requestedId);
