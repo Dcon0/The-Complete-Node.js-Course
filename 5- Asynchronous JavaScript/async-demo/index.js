@@ -1,18 +1,17 @@
 console.log('[main @' + new Date().toLocaleTimeString() + '] before');
 
-getGitHubReposAsync(1);
+getGitHubReposAsync(1)
+    .then(result => console.log('[main @' + new Date().toLocaleTimeString() + '] Result:', result))
+    .catch(error => console.log('[main @' + new Date().toLocaleTimeString() + ']', error));
 
 console.log('[main @' + new Date().toLocaleTimeString() + '] after');
 
+//It seems, this way the async function acts as Promise.all() method, 
+//that is, all promises used (awaited) have to be resolved.
 async function getGitHubReposAsync(userId) {
-    try {
-        const user = await getUserPromiseFunction(1);
-        const repos = await getGitHubReposPromiseFunction(user.id);
-        console.log('[getGitHubReposAsync Async Function @' + new Date().toLocaleTimeString() + '] User:', user);
-        console.log('[getGitHubReposAsync Async Function @' + new Date().toLocaleTimeString() + '] Repos:', repos);
-    } catch (error) {
-        console.error(error);
-    }
+    const user = await getUserPromiseFunction(1);
+    const repos = await getGitHubReposPromiseFunction(user.id);
+    return { user: user, userRepos: repos };
 }
 
 function getUserPromiseFunction(id) {
@@ -22,7 +21,7 @@ function getUserPromiseFunction(id) {
         setTimeout(() => {
             console.log('[getUser Promise @' + new Date().toLocaleTimeString() + '] User Found!');
             resolve({ id: id, name: 'User with id ' + id });
-            reject(new Error('There has been an error retrieving user!'));
+            reject(new Error('There has been an error when retrieving user!'));
         }, 2000);
     });
 }
@@ -34,7 +33,7 @@ function getGitHubReposPromiseFunction(userId) {
             console.log('[getGitHubRepo Promise @' + new Date().toLocaleTimeString() + '] Calling GitHub API');
             console.log('[getGitHubRepo Promise @' + new Date().toLocaleTimeString() + '] Repo Contents of user with id ' + userId + ' Retrieved Successfully');
             // resolve(['Repo1', 'Repo2', 'Repo3']);
-            reject(new Error('There has been an error retrieving repos!'));
+            reject(new Error('There has been an error when retrieving repos!'));
         }, 2000);
     });
 }
