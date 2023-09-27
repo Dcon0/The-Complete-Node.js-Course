@@ -1,30 +1,32 @@
-const promiseOne = new Promise((resolve, reject) => {
-    setTimeout(() => {
-        resolve({ promiseId: 1, name: "Promise One" });
-    }, 1000);
-})
+console.log('[main @' + new Date().toLocaleTimeString() + '] before');
 
-const promiseTwo = new Promise((resolve) => {
-    setTimeout(() => {
-        resolve({ promiseId: 2, name: "Promise Two" });
-    }, 2000);
-})
+getUserPromiseFunction(1)
+    .then(user => getGitHubRepoPromiseFunction(user.id))
+    .then(repos => console.log('[main @' + new Date().toLocaleTimeString() + '] Repos:', repos))
+    .catch(err => console.log(err.message))
 
-const promiseThree = new Promise((resolve, reject) => {
-    setTimeout(() => {
-        // resolve({ promiseId: 3, name: "Promise Three" });
-        reject(new Error("This is not on purpose hehe.."));
-    }, 2000);
-})
+console.log('[main @' + new Date().toLocaleTimeString() + '] after');
 
-Promise.all([promiseOne, promiseTwo]).then(result => console.log('[Promise.all([promiseOne, promiseTwo]).then]', result))
-    .catch(error => console.error('[Promise.all([promiseOne, promiseTwo]).catch]', error));
+function getUserPromiseFunction(id) {
+    console.log('[getUser Promise Function @' + new Date().toLocaleTimeString() + '] Fetching user');
+    return new Promise((resolve, reject) => {
+        console.log('[getUser Promise @' + new Date().toLocaleTimeString() + '] Fetching user ');
+        setTimeout(() => {
+            console.log('[getUser Promise @' + new Date().toLocaleTimeString() + '] User Found!');
+            resolve({ id: id, name: 'User with id ' + id });
+            reject(new Error('There has been an error'));
+        }, 2000);
+    });
+}
 
-Promise.all([promiseOne, promiseTwo, promiseThree]).then(result => console.log('[Promise.all([promiseOne, promiseTwo, promiseThree]).then]', result))
-    .catch(error => console.error('[Promise.all([promiseOne, promiseTwo, promiseThree]).catch]', error));
-
-Promise.race([promiseOne, promiseTwo, promiseThree]).then(result => console.log('[Promise.race([promiseOne, promiseTwo, promiseThree]).then]', result))
-    .catch(error => console.error('[Promise.race([promiseOne, promiseTwo, promiseThree]).catch]', error));
-
-Promise.allSettled([promiseOne, promiseTwo, promiseThree]).then(result => console.log('[Promise.allSettled([promiseOne, promiseTwo, promiseThree]).then]', result))
-    .catch(error => console.error('[Promise.allSettled([promiseOne, promiseTwo, promiseThree]).catch]', error));
+function getGitHubRepoPromiseFunction(userId) {
+    console.log('[getGitHubRepo Promise Function @' + new Date().toLocaleTimeString() + '] Calling GitHub API');
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            console.log('[getGitHubRepo Promise @' + new Date().toLocaleTimeString() + '] Calling GitHub API');
+            console.log('[getGitHubRepo Promise @' + new Date().toLocaleTimeString() + '] Repo Contents of user with id ' + userId + ' Retrieved Successfully');
+            resolve(['Repo1', 'Repo2', 'Repo3']);
+            reject(new Error('There has been an error'));
+        }, 2000);
+    });
+}
