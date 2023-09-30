@@ -47,6 +47,12 @@ async function getCourses() {
     console.log(courses);
 }
 
-getCourses();
+// getCourses();
+
+Course.find({ author: 'Yassine', isPublished: true })
+    .limit(10)
+    .sort({ name: 1 })
+    .select({ name: 1, tags: 1 })
+    .then(result => console.log(result));
 
 // mongoose.disconnect().then(res => console.log("Disconnected from DB successfully.", res));
