@@ -56,13 +56,13 @@ async function getCourses(disconnect) {
             author: /.*ssine.*/i
         }])
         .and({ isPublished: true })
-        .limit(10)
         .sort({ name: 1 })
         .select({
             name: 1,
             author: 1,
             tags: 1
-        });
+        })
+        .count();
 
     console.log(courses);
 
