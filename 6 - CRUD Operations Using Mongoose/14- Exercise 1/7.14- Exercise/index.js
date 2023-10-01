@@ -21,7 +21,7 @@ async function getCourses() {
     return await Course
         .find({
             isPublished: true,
-            tags: 'backend'
+            tags: { $all: ['backend', 'express'] }
         })
         .sort({ name: 1 })
         .select({
