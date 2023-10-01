@@ -47,10 +47,17 @@ async function getCourses(disconnect) {
     // $nin (not in)
 
     const courses = await Course
-        .find({ author: { $in: ['Yassine', 'Slaoui'] }, date: { $gte: new Date(2023, 8, 1), $lte: new Date(2023, 8, 30) } })
+        .find()
+        .or({ author: { $in: ['Yassine', 'Slaoui'] } },
+            { date: { $gte: new Date(2023, 8, 1), $lte: new Date(2023, 8, 30) } })
         .limit(10)
         .sort({ name: 1 })
-        .select({ name: 1, author: 1, tags: 1, date: 1 });
+        .select({
+            name: 1,
+            author: 1,
+            tags: 1,
+            date: 1
+        });
 
     console.log(courses);
 
