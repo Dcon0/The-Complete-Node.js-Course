@@ -45,6 +45,7 @@ async function getCourses(disconnect) {
     // $lte (lower than or equal)
     // $in
     // $nin (not in)
+    // $all (all of the array elements are present)
 
     // Say we retrieved these two parameters from this link:
     // /api/courses?pageNumber=1&pageSize=10
