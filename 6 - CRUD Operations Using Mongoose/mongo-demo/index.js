@@ -29,30 +29,33 @@ async function pushCourse(course) {
 }
 
 // pushCourse({
-//     name: 'Node.js Course',
-//     author: 'Yassine',
-//     tags: ['node', 'backend'],
-//     isPublished: true
-// })
+//     name: "Java",
+//     author: "Slaoui",
+//     tags: ["Programming", "Java"],
+//     isPublished: false
+// });
 
-// pushCourse({
-//     name: 'Angular Course',
-//     author: 'Yassine',
-//     tags: ['angular', 'frontend'],
-//     isPublished: true
-// })
+async function getCourses(disconnect) {
 
-async function getCourses() {
-    const courses = await Course.find();
+    // $eq (equal)
+    // $ne (not equal)
+    // $gt (greater than)
+    // $gte (greater than or equal)
+    // $lt (lower than)
+    // $lte (lower than or equal)
+    // $in
+    // $nin (not in)
+
+    const courses = await Course
+        .find({ author: { $in: ['Yassine', 'Slaoui'] }, date: { $gte: new Date(2023, 8, 1), $lte: new Date(2023, 8, 30) } })
+        .limit(10)
+        .sort({ name: 1 })
+        .select({ name: 1, author: 1, tags: 1, date: 1 });
+
     console.log(courses);
+
+    if (disconnect)
+        mongoose.disconnect().then(console.log("Disconnected from DB successfully."));
 }
 
-// getCourses();
-
-Course.find({ author: 'Yassine', isPublished: true })
-    .limit(10)
-    .sort({ name: 1 })
-    .select({ name: 1, tags: 1 })
-    .then(result => console.log(result));
-
-// mongoose.disconnect().then(res => console.log("Disconnected from DB successfully.", res));
+getCourses(disconnect = true);
