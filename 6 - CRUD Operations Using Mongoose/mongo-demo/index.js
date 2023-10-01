@@ -46,23 +46,17 @@ async function getCourses(disconnect) {
     // $in
     // $nin (not in)
 
+    // Say we retrieved these two parameters from this link:
+    // /api/courses?pageNumber=1&pageSize=10
+    const pageNumber = 2;
+    const pageSize = 10;
+
     const courses = await Course
-        .find()
-        .or([{
-            author: /^Yass/ //Starts with Yass Case Sensitive
-        }, {
-            author: /oui$/i //Ends with oui Case Insensitive
-        }, {
-            author: /.*ssine.*/i
-        }])
-        .and({ isPublished: true })
+        .find({ author: 'Yassine', isPublished: true })
+        .skip((pageNumber - 1) * pageSize) // pageNumber - 1 because humans count from 1 not 0, and we want to skip pageSize documents per Page
+        .limit(pageSize) // We can only show #pageSize number of documents in a single page
         .sort({ name: 1 })
-        .select({
-            name: 1,
-            author: 1,
-            tags: 1
-        })
-        .count();
+        .select({ name: 1, tags: 1 });
 
     console.log(courses);
 
