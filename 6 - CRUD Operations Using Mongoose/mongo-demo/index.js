@@ -48,15 +48,20 @@ async function getCourses(disconnect) {
 
     const courses = await Course
         .find()
-        .or({ author: { $in: ['Yassine', 'Slaoui'] } },
-            { date: { $gte: new Date(2023, 8, 1), $lte: new Date(2023, 8, 30) } })
+        .or([{
+            author: /^Yass/ //Starts with Yass Case Sensitive
+        }, {
+            author: /oui$/i //Ends with oui Case Insensitive
+        }, {
+            author: /.*ssine.*/i
+        }])
+        .and({ isPublished: true })
         .limit(10)
         .sort({ name: 1 })
         .select({
             name: 1,
             author: 1,
-            tags: 1,
-            date: 1
+            tags: 1
         });
 
     console.log(courses);
