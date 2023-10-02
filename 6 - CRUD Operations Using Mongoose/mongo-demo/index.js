@@ -28,36 +28,15 @@ async function pushCourse(course) {
     }
 }
 
-// pushCourse({
-//     name: "Java",
-//     author: "Slaoui",
-//     tags: ["Programming", "Java"],
-//     isPublished: false
-// });
-
-async function getCourses(disconnect) {
-
-    // $eq (equal)
-    // $ne (not equal)
-    // $gt (greater than)
-    // $gte (greater than or equal)
-    // $lt (lower than)
-    // $lte (lower than or equal)
-    // $in
-    // $nin (not in)
-    // $all (all of the array elements are present)
-
-    // Say we retrieved these two parameters from this link:
-    // /api/courses?pageNumber=1&pageSize=10
-    const pageNumber = 2;
-    const pageSize = 10;
-
-    const courses = await Course
+async function getCourses() {
+    return await Course
         .find({ author: 'Yassine', isPublished: true })
-        .skip((pageNumber - 1) * pageSize) // pageNumber - 1 because humans count from 1 not 0, and we want to skip pageSize documents per Page
-        .limit(pageSize) // We can only show #pageSize number of documents in a single page
         .sort({ name: 1 })
         .select({ name: 1, tags: 1 });
+}
+
+async function displayCourses(disconnect) {
+    const courses = await getCourses();
 
     console.log(courses);
 
@@ -65,4 +44,23 @@ async function getCourses(disconnect) {
         mongoose.disconnect().then(console.log("Disconnected from DB successfully."));
 }
 
-getCourses(disconnect = true);
+async function updateCourse(id, changes, disconnect) {
+    const course = await Course.findById(id);
+    console.log("Found course:", course);
+
+    if (!course) return;
+
+    // course.isPublished = true;
+    // course.author = 'Yassine Slaoui';
+
+    course.set(changes);
+
+    await course.save();
+
+    console.log("Course updated:",course);
+
+    if (disconnect)
+        mongoose.disconnect().then(console.log("Disconnected from DB successfully."));
+}
+
+updateCourse('6519430099280879a6c051ff', { isPublished: true, author: 'Yassine Slaoui' }, true)
