@@ -45,19 +45,15 @@ async function displayCourses(disconnect) {
 }
 
 async function updateCourse(id, changes, disconnect) {
-    const course = await Course.findById(id);
-    console.log("Found course:", course);
+    const result = await Course.updateOne({ _id: id }, {
+        $set: changes
+    });
 
-    if (!course) return;
+    // const result = await Course.updateMany({ _id: id }, {
+    //     $set: changes
+    // });
 
-    // course.isPublished = true;
-    // course.author = 'Yassine Slaoui';
-
-    course.set(changes);
-
-    await course.save();
-
-    console.log("Course updated:",course);
+    console.log("Course updated:", result);
 
     if (disconnect)
         mongoose.disconnect().then(console.log("Disconnected from DB successfully."));
