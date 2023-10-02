@@ -55,4 +55,13 @@ async function updateCourse(id, changes, disconnect) {
         mongoose.disconnect().then(console.log("Disconnected from DB successfully."));
 }
 
-updateCourse('6519430099280879a6c051ff', { isPublished: true, author: 'Yassine Slaoui' }, true)
+async function removeCourse(id, disconnect) {
+    const result = await Course.deleteOne({ _id: id });
+
+    console.log("Course removed:", result);
+
+    if (disconnect)
+        mongoose.disconnect().then(console.log("Disconnected from DB successfully."));
+}
+
+removeCourse('6519430099280879a6c051ff', true);
