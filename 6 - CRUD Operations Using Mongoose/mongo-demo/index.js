@@ -56,9 +56,9 @@ async function updateCourse(id, changes, disconnect) {
 }
 
 async function removeCourse(id, disconnect) {
-    const result = await Course.deleteOne({ _id: id });
+    const deletedCourse = await Course.findByIdAndDelete({ _id: id });
 
-    console.log("Course removed:", result);
+    console.log("Course removed:", deletedCourse);
 
     if (disconnect)
         mongoose.disconnect().then(console.log("Disconnected from DB successfully."));
