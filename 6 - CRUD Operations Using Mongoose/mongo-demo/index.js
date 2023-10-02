@@ -45,15 +45,11 @@ async function displayCourses(disconnect) {
 }
 
 async function updateCourse(id, changes, disconnect) {
-    const result = await Course.updateOne({ _id: id }, {
+    const courseBeforeUpdate = await Course.findByIdAndUpdate(id, {
         $set: changes
     });
 
-    // const result = await Course.updateMany({ _id: id }, {
-    //     $set: changes
-    // });
-
-    console.log("Course updated:", result);
+    console.log("Course updated:", courseBeforeUpdate);
 
     if (disconnect)
         mongoose.disconnect().then(console.log("Disconnected from DB successfully."));
