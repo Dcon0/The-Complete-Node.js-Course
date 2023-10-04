@@ -9,7 +9,7 @@ mongoose.connect(config.get('mongodbURL'))
     .catch(error => debugDB("Couldn't connect to MongoDB,", error));
 
 const courseSchema = new mongoose.Schema({
-    name: String,
+    name: { type: String, required: true },
     author: String,
     tags: [String],
     date: { type: Date, default: Date.now },
@@ -18,15 +18,25 @@ const courseSchema = new mongoose.Schema({
 
 const Course = mongoose.model('Course', courseSchema);
 
-async function pushCourse(course) {
+async function pushCourse(courseJSON, disconnect) {
     try {
-        const courseDBObject = new Course(course);
+        const courseDBObject = new Course(courseJSON);
         const saveResult = await courseDBObject.save();
         console.log(saveResult);
     } catch (error) {
-        console.error(error);
+        console.error(error.message);
     }
+
+    if (disconnect)
+        mongoose.disconnect().then(console.log("Disconnected from DB successfully."));
 }
+
+pushCourse({
+    // name: 'C++ Programming',
+    author: 'Yassine',
+    tags: ['C++', 'Programming'],
+    isPublished: true
+}, true);
 
 async function getCourses() {
     return await Course
@@ -63,5 +73,3 @@ async function removeCourse(id, disconnect) {
     if (disconnect)
         mongoose.disconnect().then(console.log("Disconnected from DB successfully."));
 }
-
-removeCourse('6519430099280879a6c051ff', true);
