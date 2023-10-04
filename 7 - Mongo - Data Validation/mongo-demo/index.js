@@ -9,11 +9,28 @@ mongoose.connect(config.get('mongodbURL'))
     .catch(error => debugDB("Couldn't connect to MongoDB,", error));
 
 const courseSchema = new mongoose.Schema({
-    name: { type: String, required: true },
+    name: {
+        type: String,
+        required: true,
+        minlength: 5,
+        maxlength: 255
+        // match: /pattern/,
+    },
+    category: {
+        type: String,
+        required: true,
+        enum: ['web', 'mobile', 'desktop', 'network']
+    },
     author: String,
     tags: [String],
     date: { type: Date, default: Date.now },
-    isPublished: Boolean
+    isPublished: Boolean,
+    price: {
+        type: Number,
+        required: function () { return this.isPublished; },
+        min: 10,
+        max: 250
+    }
 });
 
 const Course = mongoose.model('Course', courseSchema);
@@ -35,8 +52,9 @@ validateCourse({
     name: 'C++ Programming',
     author: 'Yassine',
     tags: ['C++', 'Programming'],
-    isPublished: true
-}, true)
+    isPublished: false,
+    category: 'desktop'
+}, false);
 
 async function getCourses() {
     return await Course
@@ -82,7 +100,7 @@ async function validateCourse(courseJSON, silent) {
         if (!validationResult) return true;
     }
     catch (error) {
-        if (!silent) console.error("Course object isn't valid.", error);
+        if (!silent) console.error(error);
         return false;
     }
 }
