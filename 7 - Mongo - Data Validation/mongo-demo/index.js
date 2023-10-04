@@ -31,12 +31,12 @@ async function pushCourse(courseJSON, disconnect) {
         mongoose.disconnect().then(console.log("Disconnected from DB successfully."));
 }
 
-pushCourse({
-    // name: 'C++ Programming',
+validateCourse({
+    name: 'C++ Programming',
     author: 'Yassine',
     tags: ['C++', 'Programming'],
     isPublished: true
-}, true);
+}, true)
 
 async function getCourses() {
     return await Course
@@ -72,4 +72,17 @@ async function removeCourse(id, disconnect) {
 
     if (disconnect)
         mongoose.disconnect().then(console.log("Disconnected from DB successfully."));
+}
+
+async function validateCourse(courseJSON, silent) {
+    try {
+        const courseDBObject = new Course(courseJSON);
+        const validationResult = await courseDBObject.validate();
+        if (!silent) console.log('Course object is valid.');
+        if (!validationResult) return true;
+    }
+    catch (error) {
+        if (!silent) console.error("Course object isn't valid.", error);
+        return false;
+    }
 }
