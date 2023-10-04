@@ -25,9 +25,14 @@ const courseSchema = new mongoose.Schema({
     tags: {
         type: Array,
         validate: {
-            validator: function (value) {
+            validator: (value) => {
                 if (!value) return false;
-                return value.length > 0;
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        const result = value.length > 0;
+                        resolve(result);
+                    }, 2000);
+                })
             },
             message: 'A course should have at least one tag!'
         }
@@ -60,7 +65,7 @@ async function pushCourse(courseJSON, disconnect) {
 validateCourse({
     name: 'C++ Programming',
     author: 'Yassine',
-    tags: null,
+    tags: ['c++'],
     isPublished: false,
     category: 'desktop'
 }, false);
