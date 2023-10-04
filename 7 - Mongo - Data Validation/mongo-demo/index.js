@@ -22,7 +22,16 @@ const courseSchema = new mongoose.Schema({
         enum: ['web', 'mobile', 'desktop', 'network']
     },
     author: String,
-    tags: [String],
+    tags: {
+        type: Array,
+        validate: {
+            validator: function (value) {
+                if (!value) return false;
+                return value.length > 0;
+            },
+            message: 'A course should have at least one tag!'
+        }
+    },
     date: { type: Date, default: Date.now },
     isPublished: Boolean,
     price: {
@@ -51,7 +60,7 @@ async function pushCourse(courseJSON, disconnect) {
 validateCourse({
     name: 'C++ Programming',
     author: 'Yassine',
-    tags: ['C++', 'Programming'],
+    tags: null,
     isPublished: false,
     category: 'desktop'
 }, false);
