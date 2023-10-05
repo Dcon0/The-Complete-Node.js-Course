@@ -65,7 +65,7 @@ async function pushCourse(courseJSON, disconnect) {
 validateCourse({
     name: 'C++ Programming',
     author: 'Yassine',
-    tags: ['c++'],
+    // tags: ['c++'],
     isPublished: false,
     category: 'desktop'
 }, false);
@@ -114,7 +114,14 @@ async function validateCourse(courseJSON, silent) {
         if (!validationResult) return true;
     }
     catch (error) {
-        if (!silent) console.error(error);
+        if (!silent) {
+            let i = 0;
+            for (field in error.errors) {
+                i++;
+                console.error('Validation Error ' + i + ':', error.errors[field].message);
+                console.error('======================================');
+            }
+        };
         return false;
     }
 }
