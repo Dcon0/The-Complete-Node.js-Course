@@ -19,7 +19,9 @@ const courseSchema = new mongoose.Schema({
     category: {
         type: String,
         required: true,
-        enum: ['web', 'mobile', 'desktop', 'network']
+        enum: ['web', 'mobile', 'desktop', 'network'],
+        lowercase: true,
+        trim: true
     },
     author: String,
     tags: {
@@ -43,7 +45,9 @@ const courseSchema = new mongoose.Schema({
         type: Number,
         required: function () { return this.isPublished; },
         min: 10,
-        max: 250
+        max: 250,
+        get: value => Math.round(value),
+        set: value => Math.round(value)
     }
 });
 
@@ -62,13 +66,14 @@ async function pushCourse(courseJSON, disconnect) {
         mongoose.disconnect().then(console.log("Disconnected from DB successfully."));
 }
 
-validateCourse({
-    name: 'C++ Programming',
+pushCourse({
+    name: 'Java Programming',
     author: 'Yassine',
-    // tags: ['c++'],
-    isPublished: false,
-    category: 'desktop'
-}, false);
+    tags: ['java', 'programming'],
+    isPublished: true,
+    category: 'desktop',
+    price: 15.8
+}, true);
 
 async function getCourses() {
     return await Course
