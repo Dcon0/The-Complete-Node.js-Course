@@ -1,0 +1,1 @@
+This is vidly app project.

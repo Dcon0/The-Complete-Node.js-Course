@@ -1,0 +1,3 @@
+{
+    "mongodbURL":"mongodb://someDBhost:port/vidly-project"
+}
